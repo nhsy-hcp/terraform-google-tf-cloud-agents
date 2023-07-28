@@ -148,3 +148,27 @@ variable "tfc_agent_token" {
   type        = string
   description = "Terraform Cloud agent token. (mark as sensitive) (TFC Organization Settings >> Agents)"
 }
+
+variable "tfc_agent_image" {
+  type        = string
+  description = "The Terraform Cloud agent image to use"
+  default     = "hashicorp/tfc-agent:latest"
+}
+
+variable "tfc_agent_memory_request" {
+  type        = string
+  description = "Memory request for the Terraform Cloud agent container"
+  default     = "2Gi"
+}
+
+variable "tfc_agent_cpu_request" {
+  type        = string
+  description = "CPU request for the Terraform Cloud agent container"
+  default     = "2"
+}
+
+variable "tfc_agent_replicas" {
+  type        = number
+  description = "Terraform Cloud Agent pool replicas"
+  default     = 1
+}

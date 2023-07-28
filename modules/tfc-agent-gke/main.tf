@@ -119,3 +119,94 @@ resource "kubernetes_secret" "tfc_agent_secrets" {
     tfc_agent_name        = local.tfc_agent_name
   }
 }
+
+
+# Deploy the agent
+resource "kubernetes_deployment" "tfc_agent_deployment" {
+  metadata {
+    name = "${local.tfc_agent_name}-deployment"
+  }
+
+  spec {
+    selector {
+      match_labels = {
+        app = local.tfc_agent_name
+      }
+    }
+
+    replicas = var.tfc_agent_replicas
+
+    template {
+      metadata {
+        labels = {
+          app = local.tfc_agent_name
+        }
+      }
+
+      spec {
+        container {
+          name  = local.tfc_agent_name
+          image = var.tfc_agent_image
+
+          env {
+            name = "TFC_ADDRESS"
+            value_from {
+              secret_key_ref {
+                name = var.tfc_agent_k8s_secrets
+                key  = "tfc_agent_address"
+              }
+            }
+          }
+
+          env {
+            name = "TFC_AGENT_TOKEN"
+            value_from {
+              secret_key_ref {
+                name = var.tfc_agent_k8s_secrets
+                key  = "tfc_agent_token"
+              }
+            }
+          }
+
+          env {
+            name = "TFC_AGENT_NAME"
+            value_from {
+              secret_key_ref {
+                name = var.tfc_agent_k8s_secrets
+                key  = "tfc_agent_name"
+              }
+            }
+          }
+
+          env {
+            name = "TFC_AGENT_SINGLE"
+            value_from {
+              secret_key_ref {
+                name = var.tfc_agent_k8s_secrets
+                key  = "tfc_agent_single"
+              }
+            }
+          }
+
+          env {
+            name = "TFC_AGENT_AUTO_UPDATE"
+            value_from {
+              secret_key_ref {
+                name = var.tfc_agent_k8s_secrets
+                key  = "tfc_agent_auto_update"
+              }
+            }
+          }
+
+          # https://developer.hashicorp.com/terraform/cloud-docs/agents/requirements
+          resources {
+            requests = {
+              memory = var.tfc_agent_memory_request
+              cpu    = var.tfc_agent_cpu_request
+            }
+          }
+        }
+      }
+    }
+  }
+}

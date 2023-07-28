@@ -47,3 +47,9 @@ variable "tfc_agent_pool_token" {
   description = "Terraform Cloud Agent pool token description"
   default     = "tfc-agent-gke-simple-pool-token"
 }
+
+variable "tfc_agent_replicas" {
+  type        = number
+  description = "Terraform Cloud Agent pool replicas"
+  default     = 1
+}

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
- 
+
 
 output "kubernetes_endpoint" {
   description = "The cluster endpoint"
@@ -57,4 +57,9 @@ output "subnet_name" {
 output "location" {
   description = "Cluster location"
   value       = module.tfc_agent_gke.location
+}
+
+output "cluster_endpoint" {
+  value     = module.tfc_agent_gke.kubernetes_endpoint
+  sensitive = true
 }
